@@ -21,7 +21,7 @@ function Homepage() {
 
 export default Homepage
 
-const Wrapper:any=styled.div`
+const Wrapper=styled.div`
   width:100%;
   height:100%;
   padding:100px 30px 60px 30px;

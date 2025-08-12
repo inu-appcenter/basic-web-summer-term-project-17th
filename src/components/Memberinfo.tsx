@@ -35,11 +35,13 @@ export default Card;
 const CardWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 
   width: 100%;
   max-width: 749px;
   height: 75px;
-  padding-top: 8px;
+  //padding-top: 8px;
 
   background-color: white;
   border-radius: 20px;

@@ -44,7 +44,7 @@ const Assignmentcard = ({ assignmenttitle, link, date }: CardProps) => {
 export default Assignmentcard;
 
 const CardWrapper = styled.div`
-  width: 657px;
+  width: 100%;
   height: 120px;
 
   display: flex;
@@ -54,6 +54,7 @@ const CardWrapper = styled.div`
   background-color: white;
   border-radius: 20px;
   padding: 0 20px;
+  box-sizing: border-box;
 `;
 
 const FirstArea = styled.div`

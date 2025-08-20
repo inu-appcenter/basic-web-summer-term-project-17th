@@ -137,7 +137,11 @@ const FirstArea = styled.div`
 
 const SecondArea = styled.div`
   width: 749px;
+<<<<<<< HEAD
   height: 100px;
+=======
+  height: fit-content;
+>>>>>>> f98db24f63b88bee3a2a9beb774dc0b98a332e17
 
   display: flex;
   flex-direction: column;
@@ -152,7 +156,7 @@ const SecondArea = styled.div`
 `;
 
 const ThirdArea = styled.div`
-  width: 120px;
+  //width: 120px;
 
   display: flex;
   flex-direction: column;
@@ -173,6 +177,7 @@ const CardArea = styled.div`
   justify-content: flex-start;
   box-sizing: border-box;
   padding: 20px 10px 20px 10px;
+  box-sizing: border-box;
   gap: 20px;
 
   background-color: white;

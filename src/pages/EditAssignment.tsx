@@ -119,6 +119,7 @@ const EditAssignmentWrapper = styled.div`
   gap: 40px;
 
   padding: 30px 30px 80px 130px;
+  box-sizing: border-box;
 
   background-color: #fafafa;
   border-radius: 20px;

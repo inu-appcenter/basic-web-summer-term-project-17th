@@ -89,6 +89,7 @@ const SubmissionWrapper = styled.div`
   gap: 20px;
 
   padding: 100px 30px 80px 130px;
+  box-sizing: border-box;
 
   background-color: #fafafa;
   border-radius: 20px;

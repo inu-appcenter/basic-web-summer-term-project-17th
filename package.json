@@ -10,11 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "lucide-react": "^0.540.0",
-=======
     "prettier": "^3.6.2",
->>>>>>> f98db24f63b88bee3a2a9beb774dc0b98a332e17
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",

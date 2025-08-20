@@ -5,6 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+
+  const isLoginned = () => {
+    if (localStorage.getItem("name")) {
+      console.log("true반환");
+      return true;
+    } else return false;
+  };
+
   return (
     <HeaderWrapper>
       <LeftArea>
@@ -14,7 +22,20 @@ const Header = () => {
           onClick={() => navigate("/")}
           style={{ cursor: "pointer" }}
         />
-        <button onClick={() => navigate("/login")}>로그인</button>
+        {!isLoginned() ? (
+          <button onClick={() => navigate("/login")}>로그인</button>
+        ) : (
+          <button
+            onClick={() => {
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              localStorage.removeItem("name");
+              alert("로그아웃 완료");
+            }}
+          >
+            로그아웃
+          </button>
+        )}
         <button onClick={() => navigate("/memberlist")}>회원 목록</button>
         <button onClick={() => navigate("/submission")}>과제 제출</button>
       </LeftArea>

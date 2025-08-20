@@ -75,7 +75,10 @@ const Mypage = () => {
       }
 
       alert("회원 탈퇴가 완료되었습니다.");
-      localStorage.removeItem("accessToken"); // 토큰 제거
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("name");
+
       navigate("/"); // 메인 화면으로 이동
     } catch (error) {
       alert((error as Error).message);

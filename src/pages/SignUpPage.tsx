@@ -31,6 +31,8 @@ const Signuppages = () => {
         alert("회원정보를 입력하세요.");
         return;
       }
+
+      console.log(email, password, name, part, generation, phoneNumber);
       const response = await fetch(`${baseURL}/api/auth/sign-up`, {
         method: "POST",
         headers: {

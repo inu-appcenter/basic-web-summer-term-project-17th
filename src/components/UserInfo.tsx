@@ -4,15 +4,25 @@ import { useNavigate } from "react-router-dom";
 
 const UserInfo = () => {
   const navigate = useNavigate();
+  const isLoginned = () => {
+    if (localStorage.getItem("name")) {
+      console.log("true반환");
+      return true;
+    } else return false;
+  };
   return (
     <UserInfoWrapper>
-      <img
-        src={profile}
-        alt="Profile"
-        onClick={() => navigate("/mypage")} // ✅ 홈으로 이동
-        style={{ cursor: "pointer" }}
-      />
-      <span className="userName"> {localStorage.getItem("name")} 님</span>
+      {isLoginned() && (
+        <>
+          <img
+            src={profile}
+            alt="Profile"
+            onClick={() => navigate("/mypage")} // ✅ 홈으로 이동
+            style={{ cursor: "pointer" }}
+          />
+          <span className="userName"> {localStorage.getItem("name")} 님</span>
+        </>
+      )}
     </UserInfoWrapper>
   );
 };

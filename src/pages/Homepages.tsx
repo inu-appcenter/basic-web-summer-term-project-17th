@@ -38,6 +38,7 @@ export default Homepages;
 
 const Wrapper = styled.div`
   width: 100%;
+  min-width: 1200px;
   height: 100%;
 
   padding: 100px 30px 60px 30px;

@@ -8,7 +8,13 @@ const Header = () => {
   return (
     <HeaderWrapper>
       <LeftArea>
-        <img src={appcenterlogo} alt="App Center Logo" />
+        <img
+          src={appcenterlogo}
+          alt="App Center Logo"
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+        />
+        <button onClick={() => navigate("/login")}>로그인</button>
         <button onClick={() => navigate("/memberlist")}>회원 목록</button>
         <button onClick={() => navigate("/submission")}>과제 제출</button>
       </LeftArea>
@@ -40,7 +46,6 @@ const HeaderWrapper = styled.div`
 
 const LeftArea = styled.div`
   display: flex;
-  flex-direction: row;
   gap: 20px;
 
   button {

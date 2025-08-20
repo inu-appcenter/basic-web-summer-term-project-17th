@@ -1,18 +1,27 @@
 import styled from "styled-components";
+import { ChevronRight } from "lucide-react";
 
 interface CardProps {
   Name: string;
   Description: string;
+  onClick?: () => void;
 }
 
-const Menu = ({ Name, Description }: CardProps) => {
+const Menu = ({ Name, Description, onClick }: CardProps) => {
   return (
     <MenuWrapper>
       <FirstArea>
         <div className="firstline">{Name} </div>
         <div className="secondline">{Description}</div>
       </FirstArea>
-      <Secondarea></Secondarea>
+      <Secondarea>
+        <ChevronRight
+          size={20}
+          strokeWidth={2}
+          onClick={onClick} // ✅ 클릭 시 실행
+          style={{ cursor: "pointer" }}
+        />
+      </Secondarea>
     </MenuWrapper>
   );
 };
@@ -40,6 +49,6 @@ const FirstArea = styled.div`
 `;
 
 const Secondarea = styled.div`
-  width: 24px;
-  height: 24px;
+  margin-left: auto; /* 오른쪽 끝으로 */
+  align-self: center;
 `;

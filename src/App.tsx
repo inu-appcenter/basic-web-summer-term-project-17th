@@ -5,7 +5,7 @@ import './App.css'*/
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Homepages from "./pages/Homepages";
 import Loginpages from "./pages/Loginpages";
-import Signinpages from "./pages/SignInPage";
+import Signuppages from "./pages/SignUpPage";
 import Memberlist from "./pages/Memberlist";
 import Personalinfo from "./pages/Personalinfo";
 import Editinfo from "./pages/Editinfo";
@@ -19,7 +19,7 @@ function App() {
       <Routes>
         <Route index element={<Homepages />} />
         <Route path={"/login"} element={<Loginpages />} />
-        <Route path={"/signin"} element={<Signinpages />} />
+        <Route path={"/signup"} element={<Signuppages />} />
         <Route path={"/memberlist"} element={<Memberlist />} />
         <Route path={"/personalinfo"} element={<Personalinfo />} />
         <Route path={"/editinfo"} element={<Editinfo />} />

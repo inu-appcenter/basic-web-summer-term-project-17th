@@ -44,7 +44,7 @@ const Assignmentcard = ({ assignmenttitle, link, date }: CardProps) => {
 export default Assignmentcard;
 
 const CardWrapper = styled.div`
-  width: 657px;
+  width: 680px;
   height: 120px;
 
   display: flex;
@@ -57,6 +57,10 @@ const CardWrapper = styled.div`
 `;
 
 const FirstArea = styled.div`
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* ... 처리 */
+  white-space: nowrap;
+
   .firstline {
     width: 369px;
     height: 29px;

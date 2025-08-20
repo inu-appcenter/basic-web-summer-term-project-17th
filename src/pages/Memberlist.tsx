@@ -2,8 +2,49 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Memberinfo from "../components/Memberinfo.tsx";
 import Styleddivider from "../components/StyledDivider";
+import { useState } from "react";
+import { useEffect } from "react";
 
 function Memberlist() {
+  interface User {
+    id: string;
+    email: string;
+    name: string;
+    part: string;
+    generation: number;
+    registrationDate: string;
+    phoneNumber: string;
+  }
+
+  const [members, setmembers] = useState<User[]>([]);
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  useEffect(() => {
+    const getMembers = async () => {
+      try {
+        const acceseToken = localStorage.getItem("accessToken");
+        // console.log(accessToken);
+        const response = await fetch(`${baseURL}/api/users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${acceseToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("정보 조회에 실패했습니다.");
+        }
+
+        setmembers(await response.json());
+
+        // alert("정보조회 성공");
+      } catch (error) {
+        alert((error as Error).message);
+      }
+    };
+    getMembers();
+  }, []);
+
   return (
     <MemberlistWrapper>
       <Header />
@@ -13,53 +54,18 @@ function Memberlist() {
       </FirstArea>
 
       <SecondArea>
-        <Memberinfo
-          Name={"횃불이"}
-          generation={"17기"}
-          part={"Web"}
-          date={"2025년 3월 16일"}
-          PhoneNumber={"010-1234-1234"}
-        />
-        <Styleddivider />
-        <Memberinfo
-          Name={"횃불이"}
-          generation={"17기"}
-          part={"Server"}
-          date={"2025년 3월 16일"}
-          PhoneNumber={"010-1234-1234"}
-        />
-        <Styleddivider />
-        <Memberinfo
-          Name={"횃불이"}
-          generation={"17기"}
-          part={"Android"}
-          date={"2025년 3월 16일"}
-          PhoneNumber={"010-1234-1234"}
-        />
-        <Styleddivider />
-        <Memberinfo
-          Name={"횃불이"}
-          generation={"17기"}
-          part={"Web"}
-          date={"2025년 3월 16일"}
-          PhoneNumber={"010-1234-1234"}
-        />
-        <Styleddivider />
-        <Memberinfo
-          Name={"횃불이"}
-          generation={"17기"}
-          part={"Ios"}
-          date={"2025년 3월 16일"}
-          PhoneNumber={"010-1234-1234"}
-        />
-        <Styleddivider />
-        <Memberinfo
-          Name={"횃불이"}
-          generation={"17기"}
-          part={"Web"}
-          date={"2025년 3월 16일"}
-          PhoneNumber={"010-1234-1234"}
-        />
+        {members.map((member) => (
+          <>
+            <Memberinfo
+              Name={member.name}
+              generation={member.generation}
+              part={member.part}
+              registrationDate={member.registrationDate}
+              phoneNumber={member.phoneNumber}
+            />
+            <Styleddivider />
+          </>
+        ))}
       </SecondArea>
     </MemberlistWrapper>
   );

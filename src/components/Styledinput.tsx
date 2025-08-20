@@ -1,7 +1,8 @@
 import styled from "styled-components";
+type StyledInputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
-const Styledinput = ({ placeholder }: { placeholder?: string }) => {
-  return <Input placeholder={placeholder} />;
+const Styledinput = (props: StyledInputProps) => {
+  return <Input {...props} />;
 };
 
 export default Styledinput;
@@ -20,5 +21,5 @@ const Input = styled.input`
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  color: #454545;
+  color: #565656;
 `;

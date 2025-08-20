@@ -3,9 +3,74 @@ import Header from "../components/Header";
 import StyledInput from "../components/Styledinput";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const EditAssignment = () => {
   const navigate = useNavigate();
+
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const [title, settitle] = useState("");
+  const [content, setcontent] = useState("");
+  const [link, setlink] = useState("");
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+
+      const response = await fetch(`${baseURL}/api/users/me`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        settitle(data.title);
+        setcontent(data.content);
+        setlink(data.link);
+      }
+    };
+
+    fetchMe();
+  }, []);
+
+  const handleUpdate = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("로그인이 필요합니다.");
+      }
+
+      const updateResponse = await fetch(`${baseURL}/api/users/me`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          link,
+        }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error("과제 수정 실패");
+        const errorText = await updateResponse.text();
+        console.error("서버 응답:", errorText);
+      }
+
+      const updatedUser = await updateResponse.json();
+      console.log("수정된 과제 정보:", updatedUser);
+
+      alert("과제 수정 성공!");
+      navigate("/mypage");
+    } catch (error) {
+      alert((error as Error).message);
+    }
+  };
+
   return (
     <EditAssignmentWrapper>
       <Header />
@@ -15,20 +80,26 @@ const EditAssignment = () => {
       </Titlearea>
       <FormArea>
         <h3>제목</h3>
-        <StyledInput placeholder={"과제 제목을 입력하세요."} />
-        <h3>과제링크</h3>
-        <StyledInput placeholder={"제출할 과제의 링크를 입력하세요."} />
-        <h3>제출일</h3>
         <StyledInput
-          placeholder={"solar:calendar-linear 2025년 7월 9일 오전 3시 49분"}
+          value={title}
+          placeholder={"제목을 입력하세요"}
+          onChange={(e: any) => settitle(e.target.value)}
         />
+        <h3>내용</h3>
+        <StyledInput
+          value={content}
+          placeholder={"내용을 입력하세요"}
+          onChange={(e: any) => setcontent(e.target.value)}
+        />
+        <h3>과제링크</h3>
+        <StyledInput
+          value={link}
+          placeholder={"링크를 입력하세요"}
+          onChange={(e: any) => setlink(e.target.value)}
+        />
+
         <ButtonArea>
-          <Button
-            ButtonName={"수정하기"}
-            onClick={() => {
-              navigate("/personalinfo");
-            }}
-          />
+          <Button ButtonName={"수정하기"} onClick={handleUpdate} />
         </ButtonArea>
       </FormArea>
     </EditAssignmentWrapper>

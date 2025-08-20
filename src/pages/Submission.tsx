@@ -3,9 +3,45 @@ import Header from "../components/Header";
 import StyledInput from "../components/Styledinput";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import { useState } from "react";
 
 const Submission = () => {
   const navigate = useNavigate();
+
+  const [title, settitle] = useState("");
+  const [content, setcontent] = useState("");
+  const [link, setlink] = useState("");
+
+  const baseURL = import.meta.env.VITE_BASE_URL;
+
+  const handlesubmit = async () => {
+    try {
+      if (!title.trim() || !title.trim() || !link.trim()) {
+        alert("아이디와 비밀번호를 입력하세요.");
+        return;
+      }
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+      const response = await fetch(`${baseURL}/api/assignments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title, content, link }),
+      });
+
+      if (!response.ok) {
+        throw new Error("제출에 실패했습니다.");
+      }
+
+      alert("제출 성공!");
+      navigate("/");
+    } catch (error) {
+      alert((error as Error).message);
+    }
+  };
+
   return (
     <SubmissionWrapper>
       <Header />
@@ -17,16 +53,25 @@ const Submission = () => {
       </Titlearea>
       <FormArea>
         <h3>제목</h3>
-        <StyledInput placeholder={"과제 제목을 입력하세요."} />
+        <StyledInput
+          placeholder={"과제 제목을 입력하세요."}
+          value={title}
+          onChange={(e: any) => settitle(e.target.value)}
+        />
+        <h3>과제 내용</h3>
+        <StyledInput
+          placeholder={"과제 내용을 입력하세요."}
+          value={content}
+          onChange={(e: any) => setcontent(e.target.value)}
+        />
         <h3>과제링크</h3>
-        <StyledInput placeholder={"제출할 과제의 링크를 입력하세요."} />
+        <StyledInput
+          placeholder={"제출할 과제의 링크를 입력하세요."}
+          value={link}
+          onChange={(e: any) => setlink(e.target.value)}
+        />
         <ButtonArea>
-          <Button
-            ButtonName={"제출하기"}
-            onClick={() => {
-              navigate("/Personalinfo");
-            }}
-          />
+          <Button ButtonName={"제출하기"} onClick={handlesubmit} />
         </ButtonArea>
       </FormArea>
     </SubmissionWrapper>

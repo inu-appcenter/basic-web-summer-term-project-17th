@@ -4,9 +4,55 @@ import Loginimg from "../assets/loginimg.svg";
 import Button from "../components/Button";
 import StyledInput from "../components/Styledinput";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Loginpages = () => {
   const navigate = useNavigate();
+
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+
+  interface User {
+    userName: string;
+    grantType: string;
+    accessToken: string;
+    refreshToken: string;
+  }
+
+  const baseURL = import.meta.env.VITE_BASE_URL;
+
+  const handlelogin = async () => {
+    try {
+      if (!email.trim() || !password.trim()) {
+        alert("아이디와 비밀번호를 입력하세요.");
+        return;
+      }
+      const response = await fetch(`${baseURL}/api/auth/sign-in`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("서버 응답:", errorText);
+        throw new Error("로그인에 실패했습니다.");
+      }
+
+      const userData: User = await response.json();
+
+      localStorage.setItem("accessToken", userData.accessToken);
+      localStorage.setItem("refreshToken", userData.refreshToken);
+      localStorage.setItem("name", userData.userName);
+
+      alert("로그인 성공!");
+      navigate("/");
+    } catch (error) {
+      alert((error as Error).message);
+    }
+  };
 
   return (
     <LoginpagesWrapper>
@@ -17,24 +63,29 @@ const Loginpages = () => {
         <RightArea>
           <TitleLine>로그인</TitleLine>
           <FormArea>
-            <h3>아이디</h3>
-            <StyledInput placeholder={"아이디를 입력하세요."} />
+            <h3>이메일</h3>
+            <StyledInput
+              placeholder={"이메일을 입력하세요."}
+              value={email}
+              onChange={(e: any) => setemail(e.target.value)}
+            />
             <h3>비밀번호</h3>
-            <StyledInput placeholder={"비밀번호를 입력하세요"} />
+            <StyledInput
+              placeholder={"비밀번호를 입력하세요"}
+              value={password}
+              onChange={(e: any) => setpassword(e.target.value)}
+            />
           </FormArea>
 
           <ButtonArea>
-            <Button
-              ButtonName={"로그인"}
-              onClick={() => {
-                navigate("/");
-              }}
-            />
+            <Button ButtonName={"로그인"} onClick={handlelogin} />
           </ButtonArea>
 
           <HelpArea>
-            {"계정이 없으신가요?"}
-            <span className="goregister">회원가입</span>
+            계정이 없으신가요?{" "}
+            <span className="goregister" onClick={() => navigate("/signup")}>
+              회원가입
+            </span>
           </HelpArea>
         </RightArea>
       </Box>

@@ -5,54 +5,36 @@ import Button from "../components/Button";
 import StyledInput from "../components/Styledinput";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useEffect } from "react";
 
-const Editinfo = () => {
+const Signuppages = () => {
   const navigate = useNavigate();
 
-  const baseURL = import.meta.env.VITE_BASE_URL;
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [name, setname] = useState("");
   const [part, setpart] = useState("");
-  const [generation, setgeneration] = useState<number>(0);
+  const [generation, setgeneration] = useState("");
   const [phoneNumber, setphoneNumber] = useState("");
 
-  useEffect(() => {
-    const fetchMe = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) return;
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
-      const response = await fetch(`${baseURL}/api/users/me`, {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setemail(data.email);
-        setname(data.name);
-        setpart(data.part);
-        setgeneration(data.generation);
-        setphoneNumber(data.phoneNumber);
-      }
-    };
-
-    fetchMe();
-  }, []);
-
-  const handleUpdate = async () => {
+  const handleSignup = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        throw new Error("로그인이 필요합니다.");
+      if (
+        !email.trim() ||
+        !password.trim() ||
+        !name.trim() ||
+        !part.trim() ||
+        !generation.trim() ||
+        !phoneNumber.trim()
+      ) {
+        alert("회원정보를 입력하세요.");
+        return;
       }
-
-      const updateResponse = await fetch(`${baseURL}/api/users/me`, {
-        method: "PUT",
+      const response = await fetch(`${baseURL}/api/auth/sign-up`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           email,
@@ -64,69 +46,55 @@ const Editinfo = () => {
         }),
       });
 
-      if (!updateResponse.ok) {
-        throw new Error("회원정보 수정 실패");
-        const errorText = await updateResponse.text();
-        console.error("서버 응답:", errorText);
+      if (!response.ok) {
+        throw new Error("회원가입에 실패했습니다.");
       }
 
-      const updatedUser = await updateResponse.json();
-      console.log("수정된 회원 정보:", updatedUser);
-
-      alert("회원정보 수정 성공!");
-      navigate("/mypage");
+      alert("회원가입 성공!");
+      navigate("/");
     } catch (error) {
       alert((error as Error).message);
     }
   };
 
-  // console.log("보내는 값:", {
-  //   email,
-  //   password,
-  //   name,
-  //   part,
-  //   generation,
-  //   phoneNumber,
-  // });
-
   return (
-    <EditinfoWrapper>
+    <SigninpagesWrapper>
       <Headers />
 
       <Box>
         <LeftArea src={Loginimg}></LeftArea>
         <RightArea>
-          <TitleLine>회원정보수정</TitleLine>
+          <TitleLine>회원가입</TitleLine>
           <FormArea>
-            <h3>이메일</h3>
+            <h3>아이디</h3>
             <StyledInput
+              placeholder={"아이디를 입력하세요."}
               value={email}
-              placeholder={"아이디를 입력하세요"}
               onChange={(e: any) => setemail(e.target.value)}
             />
             <h3>비밀번호</h3>
             <StyledInput
+              placeholder={"비밀번호를 입력하세요"}
               value={password}
-              placeholder={"********"}
               onChange={(e: any) => setpassword(e.target.value)}
             />
             <h3>이름</h3>
             <StyledInput
+              placeholder={"이름를 입력하세요"}
               value={name}
-              placeholder={"이름을 입력하세요"}
               onChange={(e: any) => setname(e.target.value)}
             />
             <h3>전화번호</h3>
             <StyledInput
-              value={phoneNumber}
               placeholder={"010-1234-5678"}
+              value={phoneNumber}
               onChange={(e: any) => setphoneNumber(e.target.value)}
             />
             <h3>기수</h3>
             <StyledInput
               placeholder={"17"}
               value={generation}
-              onChange={(e: any) => setgeneration(Number(e.target.value))}
+              onChange={(e: any) => setgeneration(e.target.value)}
             />
             <h3>파트</h3>
             <StyledInput
@@ -137,21 +105,26 @@ const Editinfo = () => {
           </FormArea>
 
           <ButtonArea>
-            <Button ButtonName={"수정하기"} onClick={handleUpdate} />
+            <Button ButtonName={"회원가입"} onClick={handleSignup} />
           </ButtonArea>
+
+          <HelpArea>
+            {" "}
+            <span className="goregister">회원가입</span>
+          </HelpArea>
         </RightArea>
       </Box>
-    </EditinfoWrapper>
+    </SigninpagesWrapper>
   );
 };
 
-export default Editinfo;
+export default Signuppages;
 
-const EditinfoWrapper = styled.div`
+const SigninpagesWrapper = styled.div`
   width: 100%;
   height: 100%;
 
-  padding: 100px 30px 60px 10px;
+  padding: 100px 30px 60px 30px;
   box-sizing: border-box;
 
   display: flex;
@@ -214,5 +187,17 @@ const FormArea = styled.div`
     color: #00499b;
   }
 `;
-
 const ButtonArea = styled.div``;
+const HelpArea = styled.div`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+
+  color: #000000;
+
+  .goregister {
+    color: #00499b;
+    cursor: pointer;
+  }
+`;

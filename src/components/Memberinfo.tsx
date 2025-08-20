@@ -3,13 +3,19 @@ import profile from "../assets/profile.svg";
 
 interface CardProps {
   Name: string;
-  generation: string;
+  generation: number;
   part: string;
-  date: string;
-  PhoneNumber: string;
+  registrationDate: string;
+  phoneNumber: string;
 }
 
-const Card = ({ Name, generation, part, date, PhoneNumber }: CardProps) => {
+const Card = ({
+  Name,
+  generation,
+  part,
+  registrationDate,
+  phoneNumber,
+}: CardProps) => {
   return (
     <CardWrapper>
       <FirstArea>
@@ -23,8 +29,8 @@ const Card = ({ Name, generation, part, date, PhoneNumber }: CardProps) => {
         </div>
       </SecondArea>
       <ThirdArea>
-        <div className="firstline">가입일: {date}</div>
-        <div className="Secondline">전화번호: {PhoneNumber}</div>
+        <div className="firstline">가입일: {registrationDate}</div>
+        <div className="secondline">전화번호: {phoneNumber}</div>
       </ThirdArea>
     </CardWrapper>
   );
@@ -59,10 +65,21 @@ const SecondArea = styled.div`
   flex-direction: column;
   gap: 5px;
 
+  width: 100%; /* ✅ 남은 공간 꽉 채우도록 */
+  min-width: 0;
+
+  max-width: 400px; /* ✅ 이름 영역 최대 폭 제한 */
+  min-width: 150px; /* (선택) 너무 작아지지 않도록 최소 폭 */
+  flex-shrink: 1;
+
   .firstline {
     font-size: 18px;
     font-weight: 700;
     color: #111111;
+
+    overflow: hidden; /* 넘친 글자 숨김 */
+    text-overflow: ellipsis; /* ... 처리 */
+    white-space: nowrap;
   }
 
   .secondline {
@@ -110,7 +127,7 @@ const ThirdArea = styled.div`
     font-weight: 500;
   }
 
-  .Secondline {
+  .secondline {
     font-weight: 400;
   }
 `;

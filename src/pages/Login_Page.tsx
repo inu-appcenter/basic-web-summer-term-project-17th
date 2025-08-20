@@ -4,9 +4,45 @@ import LoginImg from "../assets/loginimg.svg";
 import Button from "../components/Button";
 import StyledInput from "../components/StyledInput";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  interface User {
+    grantType: string;
+    accessToken: string;
+    refreshToken: string;
+  }
+  const baseURL = import.meta.env.VITE_BASE_URL;
+
+  const handleLogin = async () => {
+    try {
+      if (!email.trim() || !password.trim()) {
+        alert("아이디와 비밀번호를 입력해주세요.");
+        return;
+      }
+      const response = await fetch(`${baseURL}/api/users/auth/sign-in`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        throw new Error("로그인에 실패했습니다.");
+      }
+      const userData: User = await response.json();
+      localStorage.setItem("accessToken", userData.accessToken);
+      localStorage.setItem("refreshToken", userData.refreshToken);
+      alert("로그인 성공!");
+
+      navigate("/");
+    } catch (error) {
+      alert((error as Error).message);
+    }
+  };
   return (
     <LoginPageWrapper>
       <Header />
@@ -16,17 +52,20 @@ const LoginPage = () => {
           <TitleArea>로그인</TitleArea>
           <FormArea>
             <h3>아이디</h3>
-            <StyledInput placeHolder={"아이디를 입력하세요."}></StyledInput>
+            <StyledInput
+              placeholder={"이메일을 입력하세요."}
+              value={email}
+              onChange={(e: any) => setEmail(e.target.value)}
+            ></StyledInput>
             <h3>비밀번호</h3>
-            <StyledInput placeHolder={"비밀번호를 입력하세요."}></StyledInput>
+            <StyledInput
+              placeholder={"비밀번호를 입력하세요."}
+              value={password}
+              onChange={(e: any) => setPassword(e.target.value)}
+            ></StyledInput>
           </FormArea>
           <ButtonArea>
-            <Button
-              buttonName={"로그인"}
-              onClick={() => {
-                navigate("/");
-              }}
-            />
+            <Button buttonName={"로그인"} onClick={handleLogin} />
           </ButtonArea>
           <HelpArea>
             아직 계정이 없으신가요? <span className="goregister">회원가입</span>

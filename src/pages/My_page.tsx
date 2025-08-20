@@ -1,8 +1,40 @@
 import styled from "styled-components";
 import Header from "../components/Header";
-import User_list from "../components/User_list";
+import User_info from "../components/User_info";
 import Menu_component from "../components/Menu_component";
+import { useEffect, useState } from "react";
 const My_page = () => {
+interface MypageProp {
+    name: string;
+    part: string;
+    gen: number;
+    phoneNumber: string;
+}
+  
+    const [members, setMembers] = useState<MypageProp[]>([]);
+    const baseURL = import.meta.env.VITE_BASE_URL;
+  
+    useEffect(() => {
+  
+      const getMembers = async () => {
+        try {
+          const accessToken = localStorage.getItem("accessToken");
+          const response = await fetch(`${baseURL}/api/users/me`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          if (!response.ok) throw new Error("유저 정보를 불러오는 중 실패했습니다.");
+          const data = await response.json();
+          setMembers([data]);
+        } catch (error) {
+          alert((error as Error).message);
+        }
+      };
+      getMembers();
+    }, []);
   return (
     <My_page_Wrapper>
       <Header />
@@ -12,13 +44,15 @@ const My_page = () => {
       <Nyang>
         <h3>회원 정보</h3>
       </Nyang>
-      <User_list
-        name={"횃불이"}
-        number="010-1234-1234"
-        regist_date="2025/08/05"
-        part={"Web"}
-        generation={"17기"}
-      />
+      {members.map(member => (
+        <User_info
+          key={member.name}
+          name={member.name}
+          regist_date="2025/08/05"
+          gen={member.gen}
+          part={member.part}
+        />
+      ))}
       <Nyang>
         <h3>메뉴</h3>
       </Nyang>

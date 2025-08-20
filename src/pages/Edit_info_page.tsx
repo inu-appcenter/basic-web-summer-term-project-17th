@@ -3,8 +3,53 @@ import Header from "../components/Header";
 import LoginImg from "../assets/loginimg.svg";
 import Button from "../components/Button";
 import StyledInput from "../components/StyledInput";
-import StyledInput_Number from "../components/StyledInput_Number";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 const Edit_info_page = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [part, setPart] = useState("");
+  const [gen, setGen] = useState(0);
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const handleEdit= async () => {
+    try {
+      if (
+        !email.trim() ||
+        !password.trim() ||
+        !name.trim() ||
+        !part.trim() ||
+        !gen ||
+        !phoneNumber.trim()
+      ) {
+        alert("빈칸 없이 입력해주세요.");
+        return;
+      }
+      console.log(email, password, name, part, gen, phoneNumber);
+       const accessToken = localStorage.getItem("accessToken"); 
+      const response = await fetch(`${baseURL}/api/users/me`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ email, password, name, part, gen, phoneNumber }),
+        
+      });
+      if (!response.ok) {
+        throw new Error("정보 수정에 실패했습니다.");
+      }
+      alert("정보 수정 성공!");
+
+      navigate("/");
+    } catch (error) {
+      alert((error as Error).message);
+    }
+  };
   return (
     <Edit_info_page_Wrapper>
       <Header />
@@ -12,24 +57,43 @@ const Edit_info_page = () => {
         <LeftArea src={LoginImg}></LeftArea>
         <RightArea>
           <TitleArea>회원정보 수정</TitleArea>
+
           <FormArea>
             <h3>아이디</h3>
-            <StyledInput placeHolder={"아이디를 입력하세요."}></StyledInput>
+            <StyledInput placeholder={"아이디를 입력하세요."}
+            value={email}
+              onChange={(e: any) => setEmail(e.target.value)}
+            ></StyledInput>
             <h3>비밀번호</h3>
-            <StyledInput placeHolder={"비밀번호를 입력하세요."}></StyledInput>
+            <StyledInput placeholder={"비밀번호를 입력하세요."}
+            value={password}
+              onChange={(e: any) => setPassword(e.target.value)}
+              ></StyledInput>
             <h3>이름</h3>
-            <StyledInput placeHolder={"이름을 입력하세요."}></StyledInput>
+            <StyledInput placeholder={"이름을 입력하세요."}value={name}
+              onChange={(e: any) => setName(e.target.value)}
+              ></StyledInput>
             <h3>전화번호</h3>
-            <StyledInput placeHolder={"010-1234-1234"}></StyledInput>
+            <StyledInput placeholder={"010-1234-1234"}value={phoneNumber}
+              onChange={(e: any) => setPhoneNumber(e.target.value)}
+              ></StyledInput>
             <h3>기수</h3>
-            <StyledInput_Number
-              placeHolder={"기수를 입력하세요."}
-            ></StyledInput_Number>
+            <StyledInput
+              placeholder="기수를 입력하세요."
+              value={gen}
+  onChange={(e) => {
+    const value = e.target.value;
+    setGen(value === "" ? 0 : Number(value));
+  }}
+            ></StyledInput>
             <h3>파트</h3>
-            <StyledInput placeHolder={"파트를 입력하세요."}></StyledInput>
+            <StyledInput placeholder={"파트를 입력하세요."}
+            value={part}
+              onChange={(e: any) => setPart(e.target.value)}
+              ></StyledInput>
           </FormArea>
           <ButtonArea>
-            <Button buttonName={"수정하기"} onClick={() => {}} />
+            <Button buttonName={"수정하기"} onClick={handleEdit} />
           </ButtonArea>
         </RightArea>
       </Box>

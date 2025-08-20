@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
-const StyledInput=({placeHolder}:{placeHolder?:String})=>{
-    return<Input placeHolder={placeHolder}/>;
+type StyledInputProps=React.InputHTMLAttributes<HTMLInputElement>;
+const StyledInput=(props : StyledInputProps)=>{
+    return<Input{...props}/>;
 };
 export default StyledInput;
 const Input=styled.input`

@@ -1,62 +1,56 @@
 import styled from "styled-components";
 import Header from "../components/Header";
 import User_list from "../components/User_list";
+import { useEffect, useState } from "react";
 const Member_list_page = () => {
+  interface User {
+    email: string;
+    name: string;
+    part: string;
+    gen: number;
+    phoneNumber: string;
+  }
+  const [members, setMembers] = useState<User[]>([]);
+  const baseURL = import.meta.env.VITE_BASE_URL;
+
+  useEffect(() => {
+    const getMembers = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+
+        const response = await fetch(`${baseURL}/api/users/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("리스트를 불러오는중 실패했습니다.");
+        }
+        setMembers(await response.json());
+        alert("리스트 불러오기 성공!");
+      } catch (error) {
+        alert((error as Error).message);
+      }
+    };
+    getMembers();
+  }, []);
   return (
     <Member_list_pageWrapper>
       <Header />
       <First_line>회원 목록</First_line>
       <Second_line>멋진 앱센터 회원들을 소개합니다.</Second_line>
       <Box>
-        <User_list
-          name={"횃불이"}
-          number="010-1234-1234"
-          regist_date="2025/08/05"
-          generation={"17기"}
-          part={"Web"}
-        />{" "}
-        <User_list
-          name={"횃불이"}
-          number="010-1234-1234"
-          regist_date="2025/08/05"
-          generation={"17기"}
-          part={"Web"}
-        />{" "}
-        <User_list
-          name={"횃불이"}
-          number="010-1234-1234"
-          regist_date="2025/08/05"
-          generation={"17기"}
-          part={"Web"}
-        />{" "}
-        <User_list
-          name={"횃불이"}
-          number="010-1234-1234"
-          regist_date="2025/08/05"
-          generation={"17기"}
-          part={"Web"}
-        />{" "}
-        <User_list
-          name={"횃불이"}
-          number="010-1234-1234"
-          regist_date="2025/08/05"
-          generation={"17기"}
-          part={"Web"}
-        />{" "}
-        <User_list
-          name={"횃불이"}
-          number="010-1234-1234"
-          regist_date="2025/08/05"
-          generation={"17기"}
-          part={"Web"}
-        />{" "}
-        <User_list
-          name={"횃불이"}
-          number="010-1234-1234"
-          regist_date="2025/08/05"
-          generation={"17기"}
-          part={"Web"}
-        />
+        {members.map((member) => (
+          <User_list
+            name={member.name}
+            number={member.phoneNumber}
+            regist_date="2025/08/05"
+            generation={member.gen}
+            part={member.part}
+          />
+        ))}
       </Box>
     </Member_list_pageWrapper>
   );

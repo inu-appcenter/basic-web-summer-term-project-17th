@@ -1,13 +1,13 @@
 import styled from "styled-components";
 const Button_3=({
     buttonName,
-    // onClick,
+    onClick,
 }:{
     buttonName:string; 
-    // onClick:()=>void;
+    onClick:()=>void;
 })=>{
     return<Button_3Wrapper 
-    // onClick={onClick}
+    onClick={onClick}
     >{buttonName}</Button_3Wrapper>
 };
     

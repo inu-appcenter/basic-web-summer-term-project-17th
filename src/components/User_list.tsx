@@ -5,7 +5,7 @@ interface ListProp {
   number: string;
   name: string;
   regist_date: string;
-  generation: string;
+  generation: number;
   part: string;
 }
 const User_list = ({

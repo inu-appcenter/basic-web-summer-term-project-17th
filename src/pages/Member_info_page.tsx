@@ -4,13 +4,12 @@ import User_info from "../components/User_info";
 import Problem from "../components/Problem";
 import { useEffect, useState } from "react";
 
-
 const Member_info_page = () => {
   interface User {
     name: string;
     part: string;
     gen: number;
-    phoneNumber: string;
+    assignments: Assignment[];
   }
 
   interface Assignment {
@@ -18,33 +17,35 @@ const Member_info_page = () => {
     content: string;
     link: string;
     createdAt: string;
-    assignmentId:number;
+    assignmentId: number;
   }
 
-  const [members, setMembers] = useState<User[]>([]);
-  const [problems, setProblems] = useState<Assignment[]>([]);
+  const [member, setMember] = useState<User>();
+  // const [problems, setProblems] = useState<Assignment[]>([]);
   const baseURL = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
-    const getProblems = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch(`${baseURL}/api/assignments`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        if (!response.ok) throw new Error("과제 정보를 불러오는 중 실패했습니다.");
-        const data = await response.json();
-        setProblems(data);
-      } catch (error) {
-        alert((error as Error).message);
-      }
-    };
+    // const getProblems = async () => {
+    //   try {
+    //     const accessToken = localStorage.getItem("accessToken");
+    //     const response = await fetch(`${baseURL}/api/assignments`, {
+    //       method: "GET",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${accessToken}`,
+    //       },
+    //     });
+    //     if (!response.ok)
+    //       throw new Error("과제 정보를 불러오는 중 실패했습니다.");
+    //     const data = await response.json();
+    //     setProblems(data);
+    //   } catch (error) {
+    //     alert((error as Error).message);
+    //   }
+    // };
 
     const getMembers = async () => {
+      console.log("getMembers");
       try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(`${baseURL}/api/users/me`, {
@@ -54,15 +55,17 @@ const Member_info_page = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        if (!response.ok) throw new Error("유저 정보를 불러오는 중 실패했습니다.");
+        if (!response.ok)
+          throw new Error("유저 정보를 불러오는 중 실패했습니다.");
         const data = await response.json();
-        setMembers([data]);
+        console.log(data);
+        setMember(data);
       } catch (error) {
         alert((error as Error).message);
       }
     };
 
-    getProblems();
+    // getProblems();
     getMembers();
   }, []);
 
@@ -70,32 +73,34 @@ const Member_info_page = () => {
     <Member_info_pageWrapper>
       <Header />
       <First_line>회원 정보</First_line>
-      <Second_line>멋진 {"Web"} 파트원 {"횃불이"} 님을 구경해 보세요.</Second_line>
+      <Second_line>
+        멋진 {"Web"} 파트원 {"횃불이"} 님을 구경해 보세요.
+      </Second_line>
 
-      {members.map(member => (
+      {member && (
         <User_info
-          key={member.name}
           name={member.name}
           regist_date="2025/08/05"
           gen={member.gen}
           part={member.part}
         />
-      ))}
+      )}
 
       <Nyang>
         <h3>과제</h3>
       </Nyang>
       <Box>
-        {problems.map(problem => (
-          <Problem
-            key={problem.title}
-            title={problem.title}
-            content={problem.content}
-            link={problem.link}
-            createdAt={problem.createdAt}
-            assignmentId={problem.assignmentId}
-          />
-        ))}
+        {member &&
+          member.assignments.map((assignment, index) => (
+            <Problem
+              key={index}
+              title={assignment.title}
+              content={assignment.content}
+              link={assignment.link}
+              createdAt={assignment.createdAt}
+              assignmentId={assignment.assignmentId}
+            />
+          ))}
       </Box>
     </Member_info_pageWrapper>
   );
